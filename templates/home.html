@@ -74,7 +74,7 @@
             <h1 class="display-4 mt-5 mb-5">Welcome to AHN Effistitch Employee Productivity Detection System </h1>
             <div class="buttons">
                 {% if user_logged_in %}
-                <a href="{{ url_for('employees') }}" class="btn btn-primary btn-lg">Manage Employees</a>
+                <a href="{{ url_for('employees') }}" class="btn btn-success btn-lg">Manage Employees</a>
                 <a href="{{ url_for('predict') }}" class="btn btn-success btn-lg">Predict Productivity</a>
                 {% else %}
                 <a href="/login" class="btn">Login</a>
