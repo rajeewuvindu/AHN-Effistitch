@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Employee{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4 mb-5">
+                <h2 class="card-title text-center mb-4">Edit Employee</h2>
+                <form method="POST">
+                    <!-- First Name -->
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ employee.f_name }}" required>
+                    </div>
+
+                    <!-- Middle Name -->
+                    <div class="mb-3">
+                        <label for="middle_name" class="form-label">Middle Name (Optional):</label>
+                        <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ employee.m_name }}">
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ employee.l_name }}" required>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="mb-3">
+                        <label for="department" class="form-label">Select the department:</label>
+                        <select class="form-select" id="department" name="department" required>
+                            <option value="" disabled>Select Department</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}" {% if dept.id == employee.department_id %}selected{% endif %}>{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Designation -->
+                    <div class="mb-3">
+                        <label for="designation" class="form-label">Designation:</label>
+                        <input type="text" class="form-control" id="designation" name="designation" value="{{ employee.designation }}" required>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Employee</button>
+                    </div>
+                </form>
+
+                {% if message %}
+                <div class="alert alert-success mt-4" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

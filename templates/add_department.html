@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Add Department{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="margin-bottom: 280px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h2 class="card-title text-center mb-4">Add Department</h2>
+                <form action="{{ url_for('add_department') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="department_name" class="form-label">Department Name</label>
+                        <input type="text" class="form-control" id="department_name" name="department_name" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Add Department</button>
+                    </div>
+                </form>
+
+                {% if message %}
+                <div class="alert alert-info mt-3">
+                    {{ message }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

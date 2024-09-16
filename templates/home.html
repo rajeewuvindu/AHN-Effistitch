@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Detect Sign Language - Sign Language Detection{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Language Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://t4.ftcdn.net/jpg/01/25/98/03/360_F_125980342_bYJ1pSGMPNei79FbsyJb8yHueIuKmr5E.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            /* Ensure text is readable against the background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="text-center mt-5">
+            <h1 class="display-4 mt-5 mb-5">Welcome to AHN Effistitch Employee Productivity Detection System </h1>
+            <div class="buttons">
+                {% if user_logged_in %}
+                <a href="{{ url_for('employees') }}" class="btn btn-primary btn-lg">Manage Employees</a>
+                <a href="{{ url_for('predict') }}" class="btn btn-success btn-lg">Predict Productivity</a>
+                {% else %}
+                <a href="/login" class="btn">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    {% endblock %}
+
+</body>
+
+</html>

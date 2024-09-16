@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Predict Productivity{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4 mb-5">
+                <h2 class="card-title text-center mb-4">Predict Employee Productivity</h2>
+
+                <form method="POST">
+                    <!-- Department Dropdown -->
+                    <div class="mb-3">
+                        <label for="department" class="form-label">Select the department:</label>
+                        <select class="form-select" id="department" name="department" required>
+                            <option value="" disabled selected>Select Department</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- employee Dropdown -->
+                    <div class="mb-3">
+                        <label for="employee" class="form-label">Select the Employee:</label>
+                        <select class="form-select" id="employee" name="employee" required>
+                            <option value="" disabled selected>Select Employee</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="working_date" class="form-label">Select the working date:</label>
+                        <select class="form-select" id="working_date" name="working_date" required>
+                            <option value="" disabled selected>Select Working Day</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                            <!-- Add more teams as needed -->
+                        </select>
+                    </div>
+
+                    <!-- Team Number -->
+                    <div class="mb-3">
+                        <label for="team_number" class="form-label">Select the team number:</label>
+                        <select class="form-select" id="team_number" name="team_number" required>
+                            <option value="" disabled selected>Select Team Number</option>
+                            <option value="team_1">Team 1</option>
+                            <option value="team_2">Team 2</option>
+                            <!-- Add more teams as needed -->
+                        </select>
+                    </div>
+
+                    <!-- Quarter -->
+                    <div class="mb-3">
+                        <label for="quarter" class="form-label">Select the quarter:</label>
+                        <select class="form-select" id="quarter" name="quarter" required>
+                            <option value="" disabled selected>Select Quarter</option>
+                            <option value="Quarter1">Quarter 1</option>
+                            <option value="Quarter2">Quarter 2</option>
+                            <!-- Add more quarters as needed -->
+                        </select>
+                    </div>
+
+                    <!-- Number of Workers -->
+                    <div class="mb-3">
+                        <label for="workers" class="form-label">Enter the number of workers in a team:</label>
+                        <input type="number" class="form-control" id="workers" name="workers" min="0" value="0"
+                            required>
+                    </div>
+
+                    <!-- Standard Minute Value -->
+                    <div class="mb-3">
+                        <label for="std_minute_value" class="form-label">Enter the standard minute value:</label>
+                        <input type="number" class="form-control" id="std_minute_value" name="std_minute_value" min="0"
+                            value="0" required>
+                    </div>
+
+                    <!-- Incentive for the Day -->
+                    <div class="mb-3">
+                        <label for="incentive_day" class="form-label">Enter the incentive for the day:</label>
+                        <input type="number" class="form-control" id="incentive_day" name="incentive_day" min="0"
+                            value="0" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Predict Employee Productivity</button>
+                    </div>
+                </form>
+
+                {% if prediction %}
+                <div class="alert alert-info mt-3" role="alert">
+                    Predicted Productivity: {{ prediction }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const departmentSelect = document.getElementById('department');
+        const empSelect = document.getElementById('employee');
+
+        departmentSelect.addEventListener('change', function () {
+            const departmentId = this.value;
+
+            if (departmentId) {
+                fetch(`/get_employees/${departmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        empSelect.innerHTML = '<option value="" disabled selected>Select Employee</option>';
+                        data.forEach(employee => {
+                            const option = document.createElement('option');
+                            option.value = employee.id;
+                            option.textContent = employee.name;
+                            empSelect.appendChild(option);
+                        });
+                    });
+            } else {
+                empSelect.innerHTML = '<option value="" disabled selected>Select Employee</option>';
+            }
+        });
+    });
+</script>
+
+{% endblock %}
