@@ -281,6 +281,38 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        # Create a MySQL cursor to execute the query
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        # Check if the email already exists
+        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+        user = cursor.fetchone()
+
+        if user:
+            flash('Email already exists! Please use a different email.', 'danger')
+        elif password != confirm_password:
+            flash('Passwords do not match! Please try again.', 'danger')
+        else:
+            # Hash the password before storing it
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+            # Insert the new user into the database
+            cursor.execute('INSERT INTO users (username, email, password) VALUES (%s, %s, %s)', (username, email, hashed_password))
+            mysql.connection.commit()
+
+            flash('Registration successful! You can now log in.', 'success')
+            return redirect(url_for('login'))
+
+    return render_template('register.html')
+
 
 
 
@@ -302,10 +334,11 @@ def add_employee():
         ''', (first_name, middle_name, last_name, department_id, designation))
         mysql.connection.commit()
         cursor.close()
+        return render_template('add_employee.html', message='Employee added successfully')
 
         # Redirect or display success message
-        flash('Employee added successfully!')
-        return redirect(url_for('add_employee'))
+        # flash('Employee added successfully!')
+        # return redirect(url_for('add_employee'))
     pass
     # For GET requests, fetch available departments from the database
     cursor = mysql.connection.cursor()
@@ -339,7 +372,7 @@ def edit_employee(employee_id):
         mysql.connection.commit()
         cursor.close()
         flash('Employee updated successfully!')
-        return redirect(url_for('edit_employee', employee_id=employee_id))
+        return redirect(url_for('edit_employee', message='Employee updated successfully',employee_id=employee_id))
     
     cursor.execute("SELECT * FROM employees WHERE id = %s", (employee_id,))
     employee = cursor.fetchone()
@@ -367,10 +400,27 @@ def get_employees(department_id):
     employees = cursor.fetchall()
     cursor.close()
 
-    print("employees")
-    print(employees)
+    # print("employees")
+    # print(employees)
     return jsonify(employees)
 
+@app.route('/employee/<int:employee_id>')
+def employee_productivity(employee_id):
+    # Fetch the productivity data for the selected employee from the database
+    query = "SELECT * FROM productivities WHERE employee_id = %s"
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, (employee_id,))
+    employee_productivities = cursor.fetchall()
+    cursor.close()
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM employees WHERE id = %s", (employee_id,))
+    employee = cursor.fetchone()
+
+    mysql.connection.commit()
+    cursor.close()
+    # Pass the fetched data to the HTML template
+    return render_template('view_employee_productivities.html', productivities=employee_productivities, employee=employee)
 
 # @app.route('/predict_productivity', methods=['POST'])
 # def predict_productivity():

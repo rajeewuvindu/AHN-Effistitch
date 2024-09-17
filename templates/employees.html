@@ -58,6 +58,7 @@
                     <th data-field="designation" data-sortable="true">Designation</th>
                     <th data-field="department" data-sortable="true">Department</th>
                     <th data-field="actions">Actions</th>
+                    <th data-field="view_productivities">view_productivities</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +75,9 @@
                         <form action="{{ url_for('delete_employee', employee_id=employee.id) }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('employee_productivity', employee_id=employee.id) }}" class="btn btn-info btn-sm">View Productivities</a>
                     </td>
                 </tr>
                 {% endfor %}
